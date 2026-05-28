@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cherry Mae Mirante | Professional Portfolio Deck</title>
+    <style>
+        :root {
+            --primary-neon: #00F3FF; 
+            --orange-neon: #FF5722;
+            --purple-neon: #9D4EDD;
+            --construction-yellow: #FFB300;
+            --bg-dark: #121824; 
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text-light: #F8FAFC;
+            --text-muted: #94A3B8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Fixed Background Canvas */
+        #blueprintCanvas {
+            position: fixed; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Slide layout rules */
+        .slide-section {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 2rem;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        /* Two Column Split Fix */
+        .slide-container {
+            width: 90%;
+            max-width: 1350px;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .content-block {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* INFINITE MULTI-TRIGGER REFLOW ANIMATION SUB-SYSTEM */
+        .reveal-element {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1), 
+                        transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: transform, opacity;
+        }
+
+        .reveal-element.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Sequence Delays */
+        .delay-1 { transition-delay: 0.15s; }
+        .delay-2 { transition-delay: 0.3s; }
+        .delay-3 { transition-delay: 0.45s; }
+        .delay-4 { transition-delay: 0.6s; }
+
+        /* Section Title Engine */
+        .section-title-area { display: flex; flex-direction: column; gap: 0.5rem; }
+        .section-subtitle { color: var(--primary-neon); font-size: 0.9rem; font-weight: 700; letter-spacing: 3px; }
+        .section-main-title { font-size: 2.8rem; font-weight: 800; color: #FFF; }
+        .title-bar { width: 60px; height: 4px; background: linear-gradient(90deg, var(--primary-neon), var(--purple-neon)); border-radius: 2px; }
+
+        /* MULTIPLE MEDIA GRID FRAME SYSTEM */
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            width: 100%;
+        }
+        
+        .grid-span-two {
+            grid-column: span 2;
+        }
+
+        .media-frame {
+            position: relative;
+            width: 100%;
+            height: 230px; 
+            background: rgba(30, 41, 59, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .media-frame.large-frame {
+            height: 340px; 
+        }
+
+        .media-frame:hover {
+            border-color: var(--primary-neon);
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 20px 40px rgba(0, 243, 255, 0.15);
+        }
+
+        .media-frame img, .media-frame video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Top-notch rendering for calculation sheets */
+        .media-frame img.contain-img {
+            object-fit: contain;
+            background-color: #ffffff;
+            padding: 8px;
+        }
+
+        /* ==========================================
+           SLIDE 1: HERO VIEW STYLES
+           ========================================== */
+        .hero-left { display: flex; flex-direction: column; gap: 2rem; }
+        .intro-header { display: flex; flex-direction: column; gap: 0.8rem; }
+        .greeting { color: var(--construction-yellow); font-size: 1.1rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
+        .intro-header h1 { font-size: 3.5rem; font-weight: 800; line-height: 1.1; background: linear-gradient(45deg, #FFF, var(--primary-neon)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .role-container { font-size: 1.7rem; font-weight: 600; color: var(--construction-yellow); height: 38px; display: flex; align-items: center; }
+        .cursor { display: inline-block; width: 3px; background-color: var(--construction-yellow); margin-left: 5px; animation: blink 0.7s infinite; }
+        .description { color: var(--text-muted); font-size: 1.15rem; max-width: 580px; line-height: 1.7; }
+        .role-menu { display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem; }
+        .role-card { background: var(--card-bg); border: 2px solid rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 1.2rem 1.5rem; display: flex; align-items: center; gap: 1.5rem; cursor: pointer; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .role-card:hover { transform: translateX(12px); background: rgba(30, 41, 59, 0.9); }
+        .role-card.active { border-color: var(--primary-neon); box-shadow: 0 0 25px rgba(0, 243, 255, 0.25); background: rgba(15, 23, 42, 0.8); }
+        .icon-box { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        .card-cva .icon-box { background: #00E5FF; color: #000; }
+        .card-qt .icon-box { background: #FF9100; color: #000; }
+        .card-pc .icon-box { background: #D500F9; color: #FFF; }
+        .card-info { flex-grow: 1; }
+        .card-info h3 { font-size: 1.25rem; font-weight: 700; color: #FFF; margin-bottom: 0.2rem; }
+        .card-info p { color: var(--text-muted); font-size: 0.9rem; }
+        .arrow-indicator { color: var(--text-muted); font-size: 1.3rem; font-weight: bold; }
+        .role-card.active .arrow-indicator { color: var(--primary-neon); transform: translateX(5px); }
+
+        .avatar-viewport { display: flex; justify-content: center; align-items: center; height: 600px; perspective: 1000px; }
+        .chibi-container { width: 340px; height: 520px; position: relative; transform-style: preserve-3d; transition: transform 0.1s ease; }
+        .hardhat { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 190px; height: 100px; background: linear-gradient(135deg, #00E5FF, #00838F); border-radius: 95px 95px 20px 20px; z-index: 6; box-shadow: inset 0 12px 0 rgba(255,255,255,0.4), 0 5px 15px rgba(0,0,0,0.3); }
+        .hardhat-brim { position: absolute; bottom: -6px; left: -15px; width: 220px; height: 16px; background: #00B8D4; border-radius: 8px; }
+        .hardhat-sticker { position: absolute; top: 25px; left: 50%; transform: translateX(-50%); width: 32px; height: 32px; background: #FF9100; border-radius: 50%; border: 2px solid #FFF; }
+        .chibi-head { position: absolute; top: 95px; left: 50%; transform: translateX(-50%); width: 175px; height: 160px; background: #FFE0BD; border-radius: 50% 50% 48% 48%; z-index: 4; box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+        .hair-front { position: absolute; top: -5px; width: 100%; height: 65px; background: #5D4037; border-radius: 60px 60px 20px 20px; z-index: 5; }
+        .hair-side { position: absolute; top: 40px; width: 25px; height: 80px; background: #4E342E; border-radius: 0 0 15px 15px; }
+        .hair-left { left: -5px; } .hair-right { right: -5px; }
+        .hair-bun { position: absolute; right: -20px; top: 60px; width: 45px; height: 45px; background: #4E342E; border-radius: 50%; z-index: 3; }
+        .face-features { position: absolute; top: 75px; width: 100%; height: 70px; }
+        .eyes-wrapper { display: flex; justify-content: space-around; padding: 0 25px; }
+        .big-eye { width: 26px; height: 34px; background: #263238; border-radius: 50%; position: relative; animation: eyeBlink 3.5s infinite; transform-origin: center; }
+        .big-eye::before { content: ''; position: absolute; top: 5px; left: 6px; width: 8px; height: 8px; background: #FFF; border-radius: 50%; }
+        .blush { position: absolute; width: 20px; height: 10px; background: rgba(255, 23, 68, 0.4); border-radius: 50%; top: 30px; }
+        .blush-left { left: 20px; } .blush-right { right: 20px; }
+        .cute-smile { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); width: 28px; height: 14px; border-bottom: 4px solid #E91E63; border-radius: 0 0 14px 14px; }
+        .safety-gear { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 150px; height: 220px; background: #4A148C; border-radius: 45px 45px 20px 20px; z-index: 3; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .neon-vest { position: absolute; top: 25px; width: 100%; height: 100%; background: linear-gradient(to bottom, #FF6D00, #FF3D00); }
+        .reflector-v { position: absolute; width: 24px; height: 100%; background: #00E5FF; top: 0; }
+        .reflector-left { left: 28px; transform: rotate(5deg); } .reflector-right { right: 28px; transform: rotate(-5deg); }
+        .reflector-horizontal { position: absolute; width: 100%; height: 22px; background: #00E5FF; top: 100px; }
+        .held-item-board { position: absolute; bottom: 45px; right: -35px; width: 140px; height: 100px; background: #1E293B; border: 3px solid var(--primary-neon); border-radius: 12px; z-index: 7; padding: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); transform: rotate(8deg); transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
+        .board-title { font-size: 0.65rem; color: var(--primary-neon); text-transform: uppercase; font-weight: bold; margin-bottom: 4px; letter-spacing: 1px; }
+        .board-content { width: 100%; height: 65%; display: flex; flex-direction: column; gap: 4px; }
+        .board-line { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+        /* ==========================================
+           SLIDE 2: WHO I AM STYLES
+           ========================================== */
+        .profile-paragraph { color: var(--text-muted); font-size: 1.15rem; line-height: 1.8; }
+
+        /* ==========================================
+           SLIDE 3: WHAT I DO BEST STYLES
+           ========================================== */
+        .domain-deck { list-style: none; display: flex; flex-direction: column; gap: 1.5rem; }
+        .domain-deck li { color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; }
+        .domain-deck li strong { color: var(--construction-yellow); display: block; font-size: 1.2rem; margin-bottom: 0.3rem; }
+
+        /* ==========================================
+           SLIDE 4: TECH SKILLS STYLES
+           ========================================== */
+        .skills-wrapper { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1rem; }
+        .skill-tag {
+            background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: #E2E8F0;
+            padding: 0.7rem 1.4rem; border-radius: 30px; font-size: 0.95rem; font-weight: 600; cursor: default; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .skill-tag:hover { transform: scale(1.1); color: #000; font-weight: 700; }
+        .tag-bluebeam:hover { background: #00E5FF; box-shadow: 0 0 15px rgba(0, 229, 255, 0.4); }
+        .tag-autocad:hover { background: #FF5722; box-shadow: 0 0 15px rgba(255, 87, 34, 0.4); }
+        .tag-excel:hover { background: #4CAF50; box-shadow: 0 0 15px rgba(76, 175, 80, 0.4); }
+        .tag-planswift:hover { background: #FFB300; box-shadow: 0 0 15px rgba(255, 179, 0, 0.4); }
+        .tag-sketchup:hover { background: #D500F9; box-shadow: 0 0 15px rgba(213, 0, 249, 0.4); }
+        .tag-google:hover { background: #FFF; box-shadow: 0 0 15px rgba(255, 255, 255, 0.4); }
+        .tag-docs:hover { background: #00E5FF; box-shadow: 0 0 15px rgba(0, 229, 255, 0.4); }
+        .tag-rfi:hover { background: #FF9100; box-shadow: 0 0 15px rgba(255, 145, 0, 0.4); }
+
+        /* ==========================================
+           SLIDE 5: GET IN TOUCH STYLES
+           ========================================== */
+        .contact-deck { display: flex; flex-direction: column; gap: 1.5rem; width: 100%; }
+        .contact-card {
+            background: var(--card-bg);
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .contact-card:hover {
+            border-color: var(--primary-neon);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 243, 255, 0.15);
+            background: rgba(30, 41, 59, 0.9);
+        }
+        .contact-card .icon-box {
+            background: rgba(0, 243, 255, 0.1);
+            color: var(--primary-neon);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            flex-shrink: 0;
+        }
+        .contact-card:hover .icon-box {
+            background: var(--primary-neon);
+            color: #121824;
+        }
+        .contact-details h4 { font-size: 0.85rem; color: var(--construction-yellow); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.2rem; }
+        .contact-details p { font-size: 1.2rem; font-weight: 600; color: #FFF; }
+        .closing-note { font-size: 1.05rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0.5rem; }
+
+        /* Shared Keyframes */
+        @keyframes blink { 50% { opacity: 0; } }
+        @keyframes eyeBlink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.05); } }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1024px) {
+            .slide-container { grid-template-columns: 1fr; gap: 2rem; }
+            .media-grid { grid-template-columns: 1fr; }
+            .grid-span-two { grid-column: span 1; }
+            .avatar-viewport { height: 450px; }
+            .slide-section { padding: 4rem 1rem; }
+            .intro-header h1, .section-main-title { font-size: 2.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Shared Blueprint Background Layer -->
+    <canvas id="blueprintCanvas"></canvas>
+
+    <!-- =========================================================
+         SLIDE 1: HERO VIEWPORT
+         ========================================================= -->
+    <section class="slide-section" id="slide-hero">
+        <div class="slide-container">
+            <!-- LEFT COLUMN: Content Texts -->
+            <div class="hero-left reveal-element active">
+                <div class="intro-header">
+                    <span class="greeting">Welcome to my space, I am</span>
+                    <h1>Cherry Mae Mirante</h1>
+                    <div class="role-container">
+                        <span id="role-text"></span><span class="cursor">|</span>
+                    </div>
+                    <p class="description">
+                        A highly versatile construction professional specializing in structural virtual assistance, remote engineering operations, and data-driven management. I bridge technical field requirements with organized digital precision.
+                    </p>
+                </div>
+
+                <div class="role-menu">
+                    <div class="role-card card-cva active" onclick="switchActiveRole('cva', this)">
+                        <div class="icon-box"><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12h20c0-5.52-4.48-10-10-10zm0 18c-4.42 0-8-3.58-8-8h16c0 4.42-3.58 8-8 8z"/></svg></div>
+                        <div class="card-info"><h3>Construction Virtual Assistant</h3><p>RFI management, Submittals, Permit tracking & back-office support.</p></div>
+                        <div class="arrow-indicator">&gt;</div>
+                    </div>
+                    <div class="role-card card-qt" onclick="switchActiveRole('qt', this)">
+                        <div class="icon-box"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 14H7v-2h10v2zm0-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></div>
+                        <div class="card-info"><h3>Quantity Takeoff / Estimator</h3><p>Material counts, bluebeam markup, cost validation, and schedules.</p></div>
+                        <div class="arrow-indicator">&gt;</div>
+                    </div>
+                    <div class="role-card card-pc" onclick="switchActiveRole('pc', this)">
+                        <div class="icon-box"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-11v4h2v-4h3l-4-4-4 4h3z"/></svg></div>
+                        <div class="card-info"><h3>Project Coordinator</h3><p>Scheduling, subcontractor monitoring, and document control pipelines.</p></div>
+                        <div class="arrow-indicator">&gt;</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Chibi Avatar -->
+            <div class="avatar-viewport">
+                <div class="chibi-container" id="chibi3D">
+                    <div class="hardhat"><div class="hardhat-sticker"></div><div class="hardhat-brim"></div></div>
+                    <div class="chibi-head">
+                        <div class="hair-front"></div><div class="hair-side hair-left"></div><div class="hair-side hair-right"></div><div class="hair-bun"></div>
+                        <div class="face-features">
+                            <div class="eyes-wrapper"><div class="big-eye"></div><div class="big-eye"></div></div>
+                            <div class="blush blush-left"></div><div class="blush blush-right"></div><div class="cute-smile"></div>
+                        </div>
+                    </div>
+                    <div class="safety-gear">
+                        <div class="neon-vest"><div class="reflector-v reflector-left"></div><div class="reflector-v reflector-right"></div><div class="reflector-horizontal"></div></div>
+                    </div>
+                    <div class="held-item-board" id="chibiAssetBoard">
+                        <div class="board-title" id="boardTitleText">RFI LOG SYSTEM</div>
+                        <div class="board-content">
+                            <div class="board-line" style="width: 85%; background: var(--primary-neon);"></div><div class="board-line" style="width: 60%;"></div><div class="board-line" style="width: 75%;"></div><div class="board-line" style="width: 40%; background: #4CAF50;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         SLIDE 2: WHO I AM (STABLE RELATIVE IMAGE FALLBACK)
+         ========================================================= -->
+    <section class="slide-section" id="slide-who-i-am">
+        <div class="slide-container">
+            <div class="content-block">
+                <div class="section-title-area reveal-element">
+                    <span class="section-subtitle">02 / PROFESSIONAL BIOGRAPHY</span>
+                    <h2 class="section-main-title">Who I Am</h2>
+                    <div class="title-bar"></div>
+                </div>
+                <p class="profile-paragraph reveal-element delay-1">
+                    I am a versatile, tech-savvy construction professional specializing in full-cycle remote operations. With a strong background in administrative controls and technical engineering support, I assist general contractors, project managers, and engineering teams.
+                </p>
+                <p class="profile-paragraph reveal-element delay-2">
+                    My core strength lies in translating complex field data into clean, organized project pipelines, ensuring that estimates are precise and documentation flows seamlessly.
+                </p>
+            </div>
+            
+            <div class="media-grid">
+                <!-- BOX 1: MAIN PORTRAIT (FIXED RESOLUTION PATH AND ONERROR FALLBACK) -->
+                <div class="media-frame large-frame grid-span-two reveal-element delay-1">
+                    <img src="./097eef25-1923-44c5-9077-35d2832bec2f.jpg" alt="Cherry Mae Mirante - Professional Structural Portrait" onerror="this.onerror=null; this.src='097eef25-1923-44c5-9077-35d2832bec2f.jpg';">
+                </div>
+                <!-- BOX 2: Site Helmet Snap -->
+                <div class="media-frame reveal-element delay-2">
+                    <img src="febec5ca-7a59-4298-a3ab-c31d371778ee.jpg" alt="Cherry Mae Mirante - Field Operations">
+                </div>
+                <!-- BOX 3: Engineering CAD Desk Snap -->
+                <div class="media-frame reveal-element delay-3">
+                    <img src="c3563332-2e56-460e-ae92-579cc7f22590.jpg" alt="Technical CAD Operations Space">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         SLIDE 3: WHAT I DO BEST
+         ========================================================= -->
+    <section class="slide-section" id="slide-what-i-do">
+        <div class="slide-container">
+            <div class="media-grid">
+                <!-- MAIN ROW: Video System -->
+                <div class="media-frame large-frame grid-span-two reveal-element">
+                    <video class="autoplay-video" loop muted playsinline preload="auto">
+                        <source src="Recording 2026-05-28 161006.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <!-- BOX 2: Team Operations -->
+                <div class="media-frame reveal-element delay-1">
+                    <img src="e889e2bc-bd89-49ea-8808-dc654c363136.jpg" alt="Cherry Mae Mirante - Team Coordination & Project Operations">
+                </div>
+                <!-- BOX 3: Quantity Takeoff -->
+                <div class="media-frame reveal-element delay-2">
+                    <img src="Quantity take off.jpg" class="contain-img" alt="Structural Engineering Schedule and Calculation Table Takeoff">
+                </div>
+            </div>
+
+            <div class="content-block">
+                <div class="section-title-area reveal-element">
+                    <span class="section-subtitle">03 / FUNCTIONAL EXPERTISE</span>
+                    <h2 class="section-main-title">What I Do Best</h2>
+                    <div class="title-bar"></div>
+                </div>
+                <ul class="domain-deck">
+                    <li class="reveal-element delay-1">
+                        <strong>Structural VA Support:</strong> 
+                        Managing Request for Information (RFI) logs, processing submittals, and executing rigid document control tracking.
+                    </li>
+                    <li class="reveal-element delay-2">
+                        <strong>Quantity Takeoffs:</strong> 
+                        Conducting detailed material counts, structural markups, and cost validation to keep budgets intact.
+                    </li>
+                    <li class="reveal-element delay-3">
+                        <strong>Project Coordination:</strong> 
+                        Streamlining subcontractor communication, cross-checking engineering schedules, and tracking milestones.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         SLIDE 4: TECHNICAL TECH STACK (TWO INDEPENDENT VIDEOS INTEGRATED)
+         ========================================================= -->
+    <section class="slide-section" id="slide-tech-stack">
+        <div class="slide-container">
+            <div class="content-block">
+                <div class="section-title-area reveal-element">
+                    <span class="section-subtitle">04 / ECOSYSTEM & APPS</span>
+                    <h2 class="section-main-title">Technical Tech Stack</h2>
+                    <div class="title-bar"></div>
+                </div>
+                <p class="profile-paragraph reveal-element delay-1">
+                    A selection of industrial tools and production environments I leverage daily to maintain absolute structural project precision:
+                </p>
+                <div class="skills-wrapper reveal-element delay-2">
+                    <span class="skill-tag tag-bluebeam">Bluebeam Revu</span>
+                    <span class="skill-tag tag-autocad">AutoCAD</span>
+                    <span class="skill-tag tag-excel">MS Excel (Advanced)</span>
+                    <span class="skill-tag tag-planswift">PlanSwift</span>
+                    <span class="skill-tag tag-sketchup">SketchUp</span>
+                    <span class="skill-tag tag-google">Google Workspace</span>
+                    <span class="skill-tag tag-docs">Document Control</span>
+                    <span class="skill-tag tag-rfi">RFI Systems</span>
+                </div>
+            </div>
+
+            <!-- Dalawang video frames na magkatabi para sa architectural loops -->
+            <div class="media-grid">
+                <!-- Video Container 1: MP4 Model Video -->
+                <div class="media-frame reveal-element delay-1">
+                    <video class="autoplay-video" loop muted playsinline preload="auto">
+                        <source src="87b690b4-c83e-43db-8fd1-93a66704ea8b.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <!-- Video Container 2: Screen Recording Video -->
+                <div class="media-frame reveal-element delay-2">
+                    <video class="autoplay-video" loop muted playsinline preload="auto">
+                        <source src="Screen Recording 2026-05-28 164746.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         SLIDE 5: GET IN TOUCH (CONTACT DECK)
+         ========================================================= -->
+    <section class="slide-section" id="slide-contact">
+        <div class="slide-container">
+            <div class="content-block">
+                <div class="section-title-area reveal-element">
+                    <span class="section-subtitle">05 / PROJECT INQUIRIES</span>
+                    <h2 class="section-main-title">Get In Touch</h2>
+                    <div class="title-bar"></div>
+                </div>
+                <p class="closing-note reveal-element delay-1">
+                    Ready to streamline your remote construction operations, refine your quantity takeoffs, or optimize your next project documentation workflow? Let's connect.
+                </p>
+            </div>
+
+            <div class="contact-deck reveal-element delay-2">
+                <!-- Email Channel -->
+                <a href="mailto:cherrymaemirante08@gmail.com" class="contact-card">
+                    <div class="icon-box">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    </div>
+                    <div class="contact-details">
+                        <h4>Direct Email</h4>
+                        <p>cherrymaemirante@gmail.com</p>
+                    </div>
+                </a>
+
+                <!-- LinkedIn Channel -->
+                <a href="https://linkedin.com/in/cherrymaemirante" target="_blank" class="contact-card">
+                    <div class="icon-box">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    </div>
+                    <div class="contact-details">
+                        <h4>Professional Network</h4>
+                        <p>https://www.linkedin.com/in/cherrymirante/</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         AUTOMATION CORE CONTROL PIPELINES & RE-TRIGGER SCROLL
+         ========================================================= -->
+    <script>
+        // BROWSER AUTO-PLAY SYSTEM FOR ALL VIDEO UTILITIES
+        document.addEventListener("DOMContentLoaded", () => {
+            const videoContainers = document.querySelectorAll(".autoplay-video");
+            
+            videoContainers.forEach(videoElement => {
+                videoElement.muted = true; 
+                const playPromise = videoElement.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log("Autoplay context blocked, adding universal hardware event fallbacks.");
+                        document.body.addEventListener('click', () => {
+                            videoElement.play();
+                        }, { once: true });
+                    });
+                }
+            });
+        });
+
+        // RE-TRIGGER ON LEAVE OBSERVER
+        const observerOptions = { root: null, threshold: 0.15 };
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active'); 
+                } else {
+                    entry.target.classList.remove('active'); 
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-element').forEach(element => {
+            scrollObserver.observe(element);
+        });
+
+        // TYPING ENGINE LOOP CONTROLLER
+        const roles = ["Construction Virtual Assistant", "Quantity Estimator", "Project Coordinator"];
+        let roleIndex = 0; let charIndex = 0; let isDeleting = false;
+        const roleTextTarget = document.getElementById("role-text");
+
+        function typeEffect() {
+            const currentRole = roles[roleIndex];
+            if (isDeleting) { roleTextTarget.textContent = currentRole.substring(0, charIndex - 1); charIndex--; } 
+            else { roleTextTarget.textContent = currentRole.substring(0, charIndex + 1); charIndex++; }
+
+            let typeSpeed = isDeleting ? 40 : 80;
+            if (!isDeleting && charIndex === currentRole.length) { typeSpeed = 2200; isDeleting = true; } 
+            else if (isDeleting && charIndex === 0) { isDeleting = false; roleIndex = (roleIndex + 1) % roles.length; typeSpeed = 400; }
+            setTimeout(typeEffect, typeSpeed);
+        }
+        document.addEventListener("DOMContentLoaded", typeEffect);
+
+        // HERO HUB INTERACTION CONTROLLER
+        const roleDataMap = {
+            cva: { title: "RFI LOG SYSTEM", color: "#00E5FF" },
+            qt: { title: "BOQ / TAKE-OFF", color: "#FF9100" },
+            pc: { title: "MASTER SCHEDULE", color: "#D500F9" }
+        };
+
+        function switchActiveRole(roleKey, element) {
+            document.querySelectorAll('.role-card').forEach(card => card.classList.remove('active'));
+            element.classList.add('active');
+            const targetData = roleDataMap[roleKey];
+            const board = document.getElementById("chibiAssetBoard");
+            const title = document.getElementById("boardTitleText");
+            board.style.transform = "scale(0.8) rotate(-10deg)";
+            setTimeout(() => {
+                title.textContent = targetData.title;
+                board.style.borderColor = targetData.color;
+                title.style.color = targetData.color;
+                board.style.transform = "scale(1) rotate(8deg)";
+            }, 200);
+        }
+
+        // GRAPHICS 3D PARALLAX CONTROLLER
+        const chibi3D = document.getElementById("chibi3D");
+        document.addEventListener("mousemove", (event) => {
+            const xRotation = (window.innerHeight / 2 - event.pageY) / 25;
+            const yRotation = (window.innerWidth / 2 - event.pageX) / 25;
+            chibi3D.style.transform = `rotateX(${xRotation}deg) rotateY(${-yRotation}deg)`;
+        });
+
+        // ANIMATED VECTOR PARTICLES PHYSICS ENGINE
+        const canvas = document.getElementById("blueprintCanvas");
+        const ctx = canvas.getContext("2d");
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
+
+        const particleColors = ["#00F3FF", "#FF5722", "#9D4EDD", "#FFB300"];
+        const particleObjects = [];
+        for(let i=0; i<25; i++) {
+            particleObjects.push({
+                x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight,
+                radius: 3 + Math.random() * 4, color: particleColors[Math.floor(Math.random() * particleColors.length)],
+                speedY: 0.3 + Math.random() * 0.6, speedX: -0.2 + Math.random() * 0.4
+            });
+        }
+
+        function drawBackgroundGrid() {
+            ctx.strokeStyle = "rgba(148, 163, 184, 0.03)"; ctx.lineWidth = 1;
+            for(let x=0; x<canvas.width; x+=60) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
+            for(let y=0; y<canvas.height; y+=60) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
+        }
+
+        function engineLoop() {
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            drawBackgroundGrid();
+            particleObjects.forEach(p => {
+                p.y += p.speedY; p.x += p.speedX;
+                if(p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; }
+                ctx.fillStyle = p.color; ctx.globalAlpha = 0.15;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill();
+            });
+            requestAnimationFrame(engineLoop);
+        }
+        engineLoop();
+    </script>
+</body>
+</html>
